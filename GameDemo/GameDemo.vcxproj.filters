@@ -200,5 +200,6 @@
     <None Include="res\GameDemo.rc2">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="..\ReadMe.md" />
   </ItemGroup>
 </Project>
