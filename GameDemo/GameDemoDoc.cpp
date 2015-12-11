@@ -135,3 +135,11 @@ void CGameDemoDoc::Dump(CDumpContext& dc) const
 
 
 // CGameDemoDoc 命令
+
+
+void CGameDemoDoc::SetTitle(LPCTSTR lpszTitle)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	CDocument::SetTitle(_T("你瞅啥"));
+}

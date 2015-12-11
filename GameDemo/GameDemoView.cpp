@@ -28,6 +28,9 @@ BEGIN_MESSAGE_MAP(CGameDemoView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CGameDemoView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_CREATE()
+	ON_WM_TIMER()
+	ON_WM_KEYDOWN()
 END_MESSAGE_MAP()
 
 // CGameDemoView 构造/析构
@@ -125,3 +128,87 @@ CGameDemoDoc* CGameDemoView::GetDocument() const // 非调试版本是内联的
 
 
 // CGameDemoView 消息处理程序
+
+
+int CGameDemoView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  在此添加您专用的创建代码
+	SetTimer(1, 100, 0);
+	CMe::LoadImage();
+	return 0;
+}
+
+
+void CGameDemoView::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CDC *pDC = GetDC();
+
+	//每次执行，刷新窗口区，从而实现前景物体飞但并不会留下“影痕”
+	CRect rect;
+	GetClientRect(&rect);
+	pDC->Rectangle(rect);
+
+	//插入战机图片
+	//CMe::LoadImage();
+	me.Draw(pDC, FALSE);
+
+	short key = GetKeyState(VK_RIGHT);
+	if ((key & 0x80) != 0)
+	{
+		me.SetHorMotion(1);
+	}
+
+	/*只处理一架飞机
+	if (listMe.GetCount() > 0)
+	{
+		CMe *pMe = (CMe*)listMe.GetTail();
+		pMe->Draw(pDC, FALSE);
+	}
+	*/
+
+	/*遍历COBList 链表*/
+	POSITION posMe = listMe.GetHeadPosition();
+	for (posMe = listMe.GetHeadPosition(); posMe != NULL;)
+	{
+		CMe *pMe = (CMe*)listMe.GetNext(posMe);
+		pMe->SetVerMotion(-1);
+		pMe->Draw(pDC, FALSE);
+		//爆炸示例
+		CRect intersectrect;
+		pDC->Rectangle(100, 500, 150, 560);
+		int intersectsection = intersectrect.IntersectRect(pMe->GetRect(), CRect(100,500,150,560));
+		if (intersectsection != 0)
+		{
+			pDC->TextOutW(100, 100, _T("哎呀，碰上了！！！"));//显示爆炸效果
+			//从链表中删除并释放爆炸了的对象。
+		}
+	}
+	
+	
+	
+
+	ReleaseDC(pDC);//释放不需要的内存
+
+	CView::OnTimer(nIDEvent);
+}
+
+
+void CGameDemoView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (nChar == VK_SPACE)
+		listMe.AddTail(new CMe());
+	if (nChar == VK_DOWN)
+		me.SetVerMotion(-1);
+	if (nChar == VK_UP)
+		me.SetVerMotion(1);
+	if (nChar == VK_LEFT)
+		me.SetHorMotion(-1);
+	if (nChar == VK_RIGHT)
+		me.SetHorMotion(1);
+	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}

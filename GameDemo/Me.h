@@ -1,5 +1,6 @@
-#pragma once
 #include "GameObject.h"
+#include "resource.h"
+#pragma once
 
 class CMe :
 	public CGameObject

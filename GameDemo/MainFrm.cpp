@@ -405,3 +405,18 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	CFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
 }
+
+
+BOOL CMainFrame::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, LPCTSTR lpszMenuName, DWORD dwExStyle, CCreateContext* pContext)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	//	return CFrameWnd::Create(lpszClassName, lpszWindowName, dwStyle, rect, // //pParentWnd, lpszMenuName, dwExStyle, pContext);
+	HMENU nIDorHMenu = NULL;
+	return CFrameWndEx::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, lpszMenuName, dwExStyle, pContext);
+	//return CFrameWnd::CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle,
+		//rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
+		//pParentWnd->GetSafeHwnd(),
+		//nIDorHMenu,
+		//(LPVOID)pContext);
+		//上述代码出错
+}
